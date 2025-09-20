@@ -9,7 +9,7 @@ from cnnClassifier.components.prepare_base_model import PrepareBaseModel      # 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Stage Identifier for Logging and Traceability
 # ────────────────────────────────────────────────────────────────────────────────────────
-STAGE_NAME = "Prepare_Base_Model"
+STAGE_NAME = "STAGE 02: Prepare Base Modelel"
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Pipeline Class: Orchestrates Base Model Preparation Workflow
@@ -42,11 +42,11 @@ class PrepareBaseModelTrainingPipeline:
 # ────────────────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     try:
-        logger.info("*******************")
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} started   <<<<<<")
+        logger.info("*" * 80)
+        logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
         obj = PrepareBaseModelTrainingPipeline()
         obj.main()
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} completed <<<<<<\n{'x'*50}")
+        logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
     except Exception as e:
         logger.exception(e)  # Logs full traceback for debugging
         raise e              # Propagates error for upstream visibility

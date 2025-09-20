@@ -9,7 +9,7 @@ from cnnClassifier.components.model_evaluation_mlflow import Evaluation         
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Stage Identifier for Logging and Traceability
 # ────────────────────────────────────────────────────────────────────────────────────────
-STAGE_NAME = "Evaluation"
+STAGE_NAME = "STAGE 04: Model Evaluation  "
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Pipeline Class: Orchestrates Model Evaluation Workflow
@@ -45,11 +45,11 @@ class EvaluationPipeline:
 # ────────────────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     try:
-        logger.info("*******************")
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} started   <<<<<<")
+        logger.info("*" * 80)
+        logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
         obj = EvaluationPipeline()
         obj.main()
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} completed <<<<<<\n{'x'*50}")
+        logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
     except Exception as e:
         logger.exception(e)  # Logs full traceback for debugging
         raise e              # Propagates error for upstream visibility

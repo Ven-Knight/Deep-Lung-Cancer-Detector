@@ -9,7 +9,7 @@ from cnnClassifier.components.model_trainer import Training              # Train
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Stage Identifier for Logging and Traceability
 # ────────────────────────────────────────────────────────────────────────────────────────
-STAGE_NAME = "Training"
+STAGE_NAME = "STAGE 03: Model Training    "
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Pipeline Class: Orchestrates Model Training Workflow
@@ -43,11 +43,11 @@ class ModelTrainingPipeline:
 # ────────────────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     try:
-        logger.info("*******************")
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} started   <<<<<<")
+        logger.info("*" * 80)
+        logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
         obj = ModelTrainingPipeline()
         obj.main()
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} completed <<<<<<\n{'x'*50}")
+        logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
     except Exception as e:
         logger.exception(e)  # Logs full traceback for debugging
         raise e              # Propagates error for upstream visibility

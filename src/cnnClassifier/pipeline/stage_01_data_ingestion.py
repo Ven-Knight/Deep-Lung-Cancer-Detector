@@ -9,7 +9,7 @@ from cnnClassifier.components.data_ingestion import DataIngestion         # Inge
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Stage Identifier for Logging and Traceability
 # ────────────────────────────────────────────────────────────────────────────────────────
-STAGE_NAME = "Data_Ingestion"
+STAGE_NAME = "STAGE 01: Data Ingestion    "
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Pipeline Class: Orchestrates the Data Ingestion Workflow
@@ -41,10 +41,11 @@ class DataIngestionTrainingPipeline:
 # ────────────────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     try:
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} started   <<<<<<")
+        logger.info("*" * 80)
+        logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
         obj = DataIngestionTrainingPipeline()
         obj.main()
-        logger.info(f">>>>>> STAGE : {STAGE_NAME} completed <<<<<<\n{'x'*50}")
+        logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
     except Exception as e:
         logger.exception(e)  # Logs full traceback for debugging
         raise e              # Propagates error for upstream visibility
