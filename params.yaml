@@ -1,0 +1,15 @@
+AUGMENTATION       : True
+IMAGE_SIZE         : [224, 224, 3]      # VGG16 input size
+BATCH_SIZE         : 16
+INCLUDE_TOP        : False
+WEIGHTS            : imagenet
+
+CLASSES            : 4                  # Update to match data_source
+FREEZE_ALL         : True               # Freeze all layers initially
+FREEZE_TILL        : 4                  # Unfreeze last 4 layers during fine-tuning
+
+EPOCHS_HEAD        : 2                  # Initial training with frozen base
+EPOCHS_FINE        : 5                 # Fine-tuning top layers
+
+LEARNING_RATE_HEAD : 0.001              # Higher LR for head training
+LEARNING_RATE_FINE : 0.0001             # Lower  LR for fine-tuning
