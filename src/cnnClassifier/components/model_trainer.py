@@ -157,4 +157,11 @@ class Training:
                             callbacks        = [early_stop, reduce_lr]
                         )
 
+        # Save to artifacts/training (which will be ignored by gitignore)
         self.save_model(path=self.config.trained_model_path, model=self.model)
+
+        # Save to model/final_model.h5 (tracked outside .gitignore)
+        export_path = Path(self.config.model_export_path)
+        export_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure model/ exists
+        self.save_model(path=export_path, model=self.model)
+

@@ -40,6 +40,7 @@ class PrepareBaseModelConfig:
 class TrainingConfig:
     root_dir                   : Path      # Directory to store training outputs
     trained_model_path         : Path      # Path to save final trained model
+    model_export_path          : Path      # Path to save final trained model for docker visibility
     updated_base_model_path    : Path      # Path to fine-tuned base model
     training_data              : Path      # Path to training dataset
     params_batch_size          : int       # Batch size for training
