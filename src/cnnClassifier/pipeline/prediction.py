@@ -59,6 +59,7 @@ class PredictionPipeline:
         test_image = image.img_to_array (test_image)                              # Convert to NumPy array
         test_image = np.expand_dims     (test_image, axis=0)                      # Add batch dimension
 
+        print("Using MLflow-injected model for prediction")
         # Perform prediction and extract class index
         result     = np.argmax(self.model.predict(test_image), axis=1)
         print(result)        # Optional: log raw prediction index
