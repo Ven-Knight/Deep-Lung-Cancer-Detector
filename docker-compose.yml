@@ -3,12 +3,12 @@ version: '3.8'
 services:
   application:
     container_name: lung_app
-    image: "${IMAGE_NAME}"  # Injected dynamically by GitHub Actions
+    image: "${IMAGE_NAME}"  # Injected dynamically via Jenkins
     ports:
       - "8080:8080"
     environment:
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_REGION: "${AWS_REGION}"
-      MLFLOW_TRACKING_URI: "${MLFLOW_TRACKING_URI}"
+      AWS_ACCESS_KEY_ID     : "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY : "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION            : "${AWS_REGION}"
+      MLFLOW_TRACKING_URI   : "${MLFLOW_TRACKING_URI}"
     restart: unless-stopped

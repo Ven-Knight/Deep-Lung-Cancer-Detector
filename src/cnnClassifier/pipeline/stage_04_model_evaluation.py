@@ -5,6 +5,11 @@ from cnnClassifier                                    import logger             
 from cnnClassifier.config.configuration               import ConfigurationManager  # Loads config entities
 from cnnClassifier.components.model_evaluation_mlflow import Evaluation            # Evaluation logic
 
+# ────────────────────────────────────────────────────────────────────────────────────────
+# To make sure the environment variables are available before config is built
+# ────────────────────────────────────────────────────────────────────────────────────────
+from dotenv import load_dotenv
+load_dotenv()
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Stage Identifier for Logging and Traceability

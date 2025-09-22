@@ -31,10 +31,14 @@ CORS(app)
 class ClientApp:
     def __init__(self):
         self.filename = "inputImage.jpg"                          # Default filename for incoming image
-        # self.classifier = PredictionPipeline(self.filename)       # Initialize prediction pipeline
-        # Load config.yaml
+        
+        # get mlflow URI in secured way
+        from dotenv import load_dotenv
+        load_dotenv()
+        mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI")
+
+        # get registered_model_name parameter from config file
         config                = read_yaml(Path("config/config.yaml"))
-        mlflow_uri            = config["mlflow"]["uri"]
         registered_model_name = config["mlflow"]["registered_model_name"]
 
         # Set MLflow tracking URI

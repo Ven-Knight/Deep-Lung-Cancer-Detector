@@ -1,9 +1,10 @@
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Imports: Standard Libraries
 # ────────────────────────────────────────────────────────────────────────────────────────
-import tensorflow   as tf
+import os
 import mlflow
 import mlflow.keras
+import tensorflow   as tf
 from   pathlib      import Path
 from   urllib.parse import urlparse
 
@@ -103,9 +104,15 @@ class Evaluation:
         Logs evaluation metrics and model artifacts into MLflow.
         Registers model if remote tracking URI is used.
         """
-        # Set remote MLflow tracking URI (hosted on EC2)
-        mlflow.set_tracking_uri(self.config.mlflow_uri)
-        mlflow.set_registry_uri(self.config.mlflow_uri)
+        
+        # Set remote MLflow tracking URI (hosted on EC2) in secured way
+        from dotenv import load_dotenv
+        load_dotenv()
+        mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI")
+
+        
+        mlflow.set_tracking_uri(mlflow_uri)
+        mlflow.set_registry_uri(mlflow_uri)
 
         # Ensure experiment exists or create it
         experiment_name = self.config.experiment_name

@@ -113,10 +113,11 @@ class ConfigurationManager:
     # ────────────────────────────────────────────────────────────────────────────────────────
     def get_evaluation_config(self) -> EvaluationConfig:
         # Return structured config object for evaluation stage
+
         eval_config = EvaluationConfig(
                          path_of_model         = "artifacts/training/model.h5",                  # Path to trained model
                          training_data         = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.source_dir_name),
-                         mlflow_uri            = self.config.mlflow.uri,                         # MLflow tracking URI
+                         mlflow_uri            = os.environ.get("MLFLOW_TRACKING_URI"),          # MLflow tracking URI
                          all_params            = self.params,                                    # Full parameter dictionary
                          params_image_size     = self.params.IMAGE_SIZE,
                          params_batch_size     = self.params.BATCH_SIZE,

@@ -22,6 +22,6 @@ training :
   model_export_path       : model/model.h5
 
 mlflow:
-  uri                     : http://ec2-52-66-232-50.ap-south-1.compute.amazonaws.com:5000/
+  # uri                     : http://ec2-52-66-232-50.ap-south-1.compute.amazonaws.com:5000/
   experiment_name         : "Test on small VGG16 2"
   registered_model_name   : "VGG16_Model_test"
