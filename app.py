@@ -2,12 +2,15 @@
 # Imports: Core Flask Modules, CORS Handling, and Internal Pipeline Utilities
 # ────────────────────────────────────────────────────────────────────────────────────────
 import os                                                                                 # Environment variable setup
+import mlflow
+
+from pathlib                           import Path
 from flask                             import Flask, request, jsonify, render_template    # Flask app and API routing
 from flask_cors                        import CORS, cross_origin                          # Enable cross-origin requests
 from cnnClassifier.utils.common        import decodeImage                                 # Base64 image decoding utility
 from cnnClassifier.pipeline.prediction import PredictionPipeline                          # Prediction pipeline wrapper
 
-
+from cnnClassifier.utils.common        import read_yaml                                   # Utility to load yaml
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Environment Locale Setup: Ensures UTF-8 Compatibility for Image and Log Handling
 # ────────────────────────────────────────────────────────────────────────────────────────
@@ -28,7 +31,26 @@ CORS(app)
 class ClientApp:
     def __init__(self):
         self.filename = "inputImage.jpg"                          # Default filename for incoming image
-        self.classifier = PredictionPipeline(self.filename)       # Initialize prediction pipeline
+        # self.classifier = PredictionPipeline(self.filename)       # Initialize prediction pipeline
+        # Load config.yaml
+        config                = read_yaml(Path("config/config.yaml"))
+        mlflow_uri            = config["mlflow"]["uri"]
+        registered_model_name = config["mlflow"]["registered_model_name"]
+
+        # Set MLflow tracking URI
+        mlflow.set_tracking_uri(mlflow_uri)
+
+        # Load model from MLflow registry
+        try:
+            print("Loading model from MLflow registry...")
+            model            = mlflow.keras.load_model(f"models:/{registered_model_name}/Production")
+            self.classifier  = PredictionPipeline(self.filename, model=model)
+            print("Model loaded and ready for prediction.")
+        except Exception as e:
+            print(f"Failed to load model from MLflow registry: {e}")
+            self.classifier = None
+
+
 
 
 # ────────────────────────────────────────────────────────────────────────────────────────
