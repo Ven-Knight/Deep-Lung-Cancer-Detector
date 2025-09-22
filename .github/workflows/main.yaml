@@ -1,111 +1,17 @@
-name: Deep Lung Cancer CI/CD
+name: Trigger Jenkins Job
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
-
-permissions:
-  id-token: write
-  contents: read
-
+  workflow_dispatch:
+    
 jobs:
-  integration:
-    name: Continuous Integration
+  trigger:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Lint code
-        run: echo "Linting repository"
-
-      - name: Run unit tests
-        run: echo "Running unit tests"
-
-  build-and-push-ecr-image:
-    name: Continuous Delivery
-    needs: integration
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Utilities
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq unzip
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Trigger Jenkins Job
+        uses: appleboy/jenkins-action@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "IMAGE_NAME=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
-
-  deploy-to-ec2:
-    name: Continuous Deployment
-    needs: build-and-push-ecr-image
-    runs-on: self-hosted
-    env:
-      IMAGE_NAME: ${{ env.IMAGE_NAME }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Pull latest image from ECR
-        run: |
-          docker pull ${{ env.IMAGE_NAME }}
-
-      - name: Stop and remove existing container
-        run: |
-          docker ps -q --filter "name=lung_app" | grep -q . && docker stop lung_app && docker rm -fv lung_app || echo "No running container"
-
-      - name: Run Docker Compose with injected secrets
-        run: |
-          IMAGE_NAME="${{ env.IMAGE_NAME }}" \
-          AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-          AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-          AWS_REGION="${{ secrets.AWS_REGION }}" \
-          MLFLOW_TRACKING_URI="${{ secrets.MLFLOW_TRACKING_URI }}" \
-          docker-compose up -d
-
-      - name: Verify App is Running
-        run: |
-          curl --fail http://localhost:8080 || (echo "App failed to start" && exit 1)
-
-      - name: Clean up unused Docker resources
-        run: |
-          docker system prune -f
+          url: ${{ secrets.URL }}
+          user: ${{ secrets.USER }}
+          token: ${{ secrets.TOKEN }}
+          job: ${{ secrets.JOBS }}
