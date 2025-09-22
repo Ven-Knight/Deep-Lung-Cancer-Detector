@@ -24,6 +24,10 @@ class PredictionPipeline:
         """
         self.filename = filename
         self.model    = model or self._load_default_model()
+        
+        if self.model is None:
+            raise RuntimeError("Model is not loaded. Cannot perform prediction.")
+
 
     def _load_default_model(self):
         """
