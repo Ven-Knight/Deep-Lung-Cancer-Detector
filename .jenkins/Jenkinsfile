@@ -54,11 +54,12 @@ pipeline {
               ssh -o StrictHostKeyChecking=no -l ubuntu 15.207.82.136 '
                 cd /home/ubuntu/
                 wget https://raw.githubusercontent.com/Ven-Knight/Deep-Lung-Cancer-Detector/refs/heads/main/docker-compose.yml
-                export IMAGE_NAME            = ${ECR_REPOSITORY}:latest
-                export AWS_ACCESS_KEY_ID     = ${AWS_ACCESS_KEY_ID}
-                export AWS_SECRET_ACCESS_KEY = ${AWS_SECRET_ACCESS_KEY}
-                export AWS_REGION            = ap-south-1
-                export MLFLOW_TRACKING_URI   = ${MLFLOW_TRACKING_URI}
+                export IMAGE_NAME=${ECR_REPOSITORY}:latest
+                export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                export AWS_REGION=ap-south-1
+                export MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+
                 aws ecr get-login-password --region ap-south-1 | \
                 docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com
                 docker compose up -d
