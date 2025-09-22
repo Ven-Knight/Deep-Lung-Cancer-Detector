@@ -49,6 +49,10 @@ class ClientApp:
             print("Loading model from MLflow registry...")
             model            = mlflow.keras.load_model(f"models:/{registered_model_name}/Production")
             self.classifier  = PredictionPipeline(self.filename, model=model)
+
+            # Assert model is loaded
+            assert self.classifier.model is not None, "Model failed to load from MLflow"
+
             print("Model loaded and ready for prediction.")
         except Exception as e:
             print(f"Failed to load model from MLflow registry: {e}")
@@ -65,6 +69,12 @@ class ClientApp:
 def home():
     return render_template('index.html')                          # Assumes templates/index.html exists
 
+# ────────────────────────────────────────────────────────────────────────────────────────
+# Route: To confirm Model Rediness
+# ────────────────────────────────────────────────────────────────────────────────────────
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"model_loaded": clApp.classifier.model is not None})
 
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Route: Training Trigger - Executes Full Pipeline via main.py

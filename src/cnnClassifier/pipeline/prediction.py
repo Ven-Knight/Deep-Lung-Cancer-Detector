@@ -29,8 +29,8 @@ class PredictionPipeline:
         """
         Fallback method to load model from disk if not provided externally.
         """
-        print("No model provided. Loading from local path...")
-        return tf.keras.models.load_model("model/model.h5")
+        raise RuntimeError("No model provided and fallback is disabled in production.")
+
 
 
     # ────────────────────────────────────────────────────────────────────────────────────────
