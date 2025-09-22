@@ -38,6 +38,13 @@ pipeline {
       }
     }
 
+    stage('Checkout Fresh Code') {
+      steps {
+        git branch: 'main', url: 'https://github.com/Ven-Knight/Deep-Lung-Cancer-Detector.git'
+      }
+    }
+
+
     stage('Build Image') {
       steps {
         script {
