@@ -3,6 +3,7 @@ pandas
 gdown
 dvc
 mlflow==2.2.2
+keras
 # notebook==6.4.5      # pinned for Python 3.8 compatibility
 numpy
 matplotlib
