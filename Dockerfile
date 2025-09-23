@@ -1,7 +1,8 @@
 FROM python:3.8-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y unzip curl \
+# Install system dependencies and build tools
+RUN apt-get update && apt-get install -y \
+    unzip curl gcc g++ make build-essential \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
