@@ -4,6 +4,7 @@ services:
   application:
     container_name: lung_app
     image: "${IMAGE_NAME}"  # Injected dynamically via Jenkins
+    # image: 783495883940.dkr.ecr.ap-south-1.amazonaws.com/cancer_ecr:latest
     ports:
       - "8080:8080"
     environment:
