@@ -43,11 +43,11 @@ class ModelTrainingPipeline:
 # ────────────────────────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     try:
-        logger.info("*" * 80)
-        logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
+        logger.info("\n" + "*" * 90)
+        logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} started   <<<<<<")
         obj = ModelTrainingPipeline()
         obj.main()
-        logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
+        logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} completed <<<<<<")
     except Exception as e:
         logger.exception(e)  # Logs full traceback for debugging
         raise e              # Propagates error for upstream visibility

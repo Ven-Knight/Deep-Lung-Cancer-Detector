@@ -12,11 +12,11 @@ from cnnClassifier.pipeline.stage_04_model_evaluation   import EvaluationPipelin
 # ────────────────────────────────────────────────────────────────────────────────────────
 STAGE_NAME = "STAGE 01: Data Ingestion    "
 try:
-    logger.info("*" * 80)
-    logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
+    logger.info("\n" + "*" * 90)
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} started   <<<<<<")
     obj = DataIngestionTrainingPipeline()
     obj.main()
-    logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} completed <<<<<<")
 except Exception as e:
     logger.exception(e)  # Logs full traceback for debugging
     raise e              # Propagates error for upstream visibility
@@ -26,11 +26,11 @@ except Exception as e:
 # ────────────────────────────────────────────────────────────────────────────────────────
 STAGE_NAME = "STAGE 02: Prepare Base Model"
 try:
-    logger.info("*" * 80)
-    logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
+    logger.info("\n" + "*" * 90)
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} started   <<<<<<")
     prepare_base_model = PrepareBaseModelTrainingPipeline()
     prepare_base_model.main()
-    logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} completed <<<<<<")
 except Exception as e:
     logger.exception(e)
     raise e
@@ -40,12 +40,12 @@ except Exception as e:
 # ────────────────────────────────────────────────────────────────────────────────────────
 STAGE_NAME = "STAGE 03: Model Training    "
 try:
-    logger.info("*" * 80)
-    logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
+    logger.info("\n" + "*" * 90)
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} started   <<<<<<")
     prepare_base_model = PrepareBaseModelTrainingPipeline()
     model_trainer = ModelTrainingPipeline()
     model_trainer.main()
-    logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} completed <<<<<<")
 except Exception as e:
     logger.exception(e)
     raise e
@@ -55,12 +55,12 @@ except Exception as e:
 # ────────────────────────────────────────────────────────────────────────────────────────
 STAGE_NAME = "STAGE 04: Model Evaluation  "
 try:
-    logger.info("*" * 80)
-    logger.info(f">>>>>> {STAGE_NAME} started   <<<<<<")
+    logger.info("\n" + "*" * 90)
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} started   <<<<<<")
     prepare_base_model = PrepareBaseModelTrainingPipeline()
     model_evaluation = EvaluationPipeline()
     model_evaluation.main()
-    logger.info(f">>>>>> {STAGE_NAME} completed <<<<<<")
+    logger.info(f"\n\t\t\t\t>>>>>> {STAGE_NAME} completed <<<<<<")
 except Exception as e:
     logger.exception(e)
     raise e
