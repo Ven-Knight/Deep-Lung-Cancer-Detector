@@ -3,6 +3,7 @@
 # ────────────────────────────────────────────────────────────────────────────────────────
 import os                                                                                 # Environment variable setup
 import mlflow
+import mlflow.keras
 
 from pathlib                           import Path
 from flask                             import Flask, request, jsonify, render_template    # Flask app and API routing
