@@ -4,10 +4,13 @@
 import os
 import mlflow
 import mlflow.keras
-import tensorflow   as tf
-from   pathlib      import Path
-from   urllib.parse import urlparse
+import tensorflow        as tf
+import matplotlib.pyplot as plt
+import seaborn           as sns
 
+from   sklearn.metrics import confusion_matrix, classification_report
+from   pathlib         import Path
+from   urllib.parse    import urlparse
 # ────────────────────────────────────────────────────────────────────────────────────────
 # Imports: Project Utilities
 # ────────────────────────────────────────────────────────────────────────────────────────
@@ -46,8 +49,7 @@ class Evaluation:
                                                                         directory = self.config.test_data,
                                                                         shuffle   = False,
                                                                         **dataflow_kwargs
-                                                                     )
-    
+                                                                     )    
 
     # ────────────────────────────────────────────────────────────────────────────────────────
     # Load Trained Model from Disk
@@ -65,17 +67,48 @@ class Evaluation:
         """
         return tf.keras.models.load_model(path)
 
+    # ────────────────────────────────────────────────────────────────────────────────────────
+    # confusion matrics creation
+    # ────────────────────────────────────────────────────────────────────────────────────────
+    def log_confusion_matrix(self, y_true, y_pred, dataset_name="Test Data"):
+        cm = confusion_matrix(y_true, y_pred)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.title(f'Confusion Matrix for {dataset_name}')
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        cm_file_path = f'confusion_matrix_{dataset_name.replace(" ", "_")}.png'
+        plt.savefig(cm_file_path)
+        mlflow.log_artifact(cm_file_path)
+        plt.close()
 
     # ────────────────────────────────────────────────────────────────────────────────────────
     # Save Evaluation Metrics Locally
     # ────────────────────────────────────────────────────────────────────────────────────────
     def save_score(self):
-        """
-        Saves evaluation metrics (loss and accuracy) to a local JSON file.
-        """
-        scores = {"loss" : self.score[0], "accuracy" : self.score[1]}
+        """Saves loss, accuracy, and class-wise metrics from classification report to scores.json."""
+        # Start with loss and accuracy (evaluation metrics)
+        scores = {
+                    "loss"     : float(self.score[0]),
+                    "accuracy" : float(self.score[1])
+                 }
+
+        # Add class-wise metrics
+        cr = classification_report(self.y_true, self.y_pred_classes, output_dict=True)
+        for label, metrics in cr.items():
+            clean_label = label.replace(" avg", "")
+            if isinstance(metrics, dict):
+                for metric, value in metrics.items():
+                    scores[f"{clean_label}_{metric}"] = float(value)
+            else:
+                scores[clean_label] = float(metrics)
+
+        # Save to scores.json
         save_json(path=Path("scores.json"), data=scores)
 
+        # store for MLflow logging
+        self.metric_store = scores
+    
     # ────────────────────────────────────────────────────────────────────────────────────────
     # Evaluate Model on Validation Data
     # ────────────────────────────────────────────────────────────────────────────────────────
@@ -84,9 +117,13 @@ class Evaluation:
         Loads the model, prepares test data, evaluates performance,
         and saves the score locally.
         """
-        self.model = self.load_model(self.config.path_of_model)
+        self.model          = self.load_model(self.config.path_of_model)
         self._test_generator()
-        self.score = self.model.evaluate(self.test_generator)
+        self.score          = self.model.evaluate(self.test_generator)
+        self.y_pred         = self.model.predict(self.test_generator)
+        self.y_pred_classes = self.y_pred.argmax(axis=1)
+        self.y_true         = self.test_generator.classes
+
         self.save_score()
 
     
@@ -122,12 +159,15 @@ class Evaluation:
         with mlflow.start_run():
             # Log hyperparameters
             mlflow.log_params(self.config.all_params)
+            
+            # Log all evaluation metrics from scores.json
+            mlflow.log_metrics(self.metric_store)
 
-            # Log evaluation metrics
-            mlflow.log_metrics({
-                                    "loss"     : self.score[0],
-                                    "accuracy" : self.score[1]
-                               })
+            # Log confusion matrix
+            self.log_confusion_matrix(self.y_true, self.y_pred_classes)
+
+            # Log scores.json as an artifact
+            mlflow.log_artifact("scores.json")
 
             # Log model to S3 (via MLflow)
             if tracking_url_type_store != "file":
