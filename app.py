@@ -5,6 +5,7 @@ import os                                                                       
 import mlflow
 import mlflow.keras
 
+from mlflow.tracking                   import MlflowClient
 from pathlib                           import Path
 from flask                             import Flask, request, jsonify, render_template    # Flask app and API routing
 from flask_cors                        import CORS, cross_origin                          # Enable cross-origin requests
@@ -47,14 +48,22 @@ class ClientApp:
 
         # Load model from MLflow registry
         try:
-            print("Loading model from MLflow registry...")
-            model            = mlflow.keras.load_model(f"models:/{registered_model_name}/Production")
-            self.classifier  = PredictionPipeline(self.filename, model=model)
+            # Get latest version in Production stage
+            client              = MlflowClient()
+            latest_version_info = client.get_latest_versions(registered_model_name, stages=["Production"])[0]
+            model_version       = latest_version_info.version
 
-            # Assert model is loaded
+            # Construct model URI with version
+            model_uri           = f"models:/{registered_model_name}/Production"
+            print(f"Loading model from MLflow registry ==> {model_uri} (version {model_version})")
+
+            # Load model
+            model               = mlflow.keras.load_model(model_uri)
+            self.classifier     = PredictionPipeline(self.filename, model=model)
+
+            # Confirm model loaded
             assert self.classifier.model is not None, "Model failed to load from MLflow"
-
-            print("Model loaded and ready for prediction.")
+            print(f"Model loaded successfully: {registered_model_name}, version: {model_version}, stage: Production")
         except Exception as e:
             print(f"Failed to load model from MLflow registry: {e}")
             self.classifier = None
