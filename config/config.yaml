@@ -3,10 +3,10 @@ artifacts_root : artifacts
 
 data_ingestion :
   root_dir                : artifacts/data_ingestion
-  source_URL              : https://drive.google.com/file/d/1eJZYtupcRu7PM4oGjtI_DG4Q31FvtTur/view?usp=sharing  
+  source_URL              : https://drive.google.com/file/d/1MYDIeCXVH0nOmPvkE8ku7L1lW3qk2gIp/view?usp=sharing 
   local_data_file         : artifacts/data_ingestion/data.zip
   unzip_dir               : artifacts/data_ingestion
-  source_dir_name         : chest_ct_scan_images_small
+  source_dir_name         : lung_colon_ct_scan_image_set
 
 
 prepare_base_model :
@@ -22,6 +22,5 @@ training :
   model_export_path       : model/model.h5
 
 mlflow:
-  # uri                     : http://ec2-52-66-232-50.ap-south-1.compute.amazonaws.com:5000/
-  experiment_name         : "Test on small VGG16 2"
-  registered_model_name   : "VGG16_Model_test"
+  experiment_name         : "Experiment with VGG16"
+  registered_model_name   : "VGG16_Model" 

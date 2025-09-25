@@ -30,30 +30,24 @@ class Evaluation:
     # ────────────────────────────────────────────────────────────────────────────────────────
     # Setup Validation Data Generator
     # ────────────────────────────────────────────────────────────────────────────────────────
-    def _valid_generator(self):
-        """
-        Creates a validation data generator using ImageDataGenerator.
-        Applies rescaling and splits data for evaluation.
-        """
-        datagenerator_kwargs = dict(
-                                        rescale          = 1./255,
-                                        validation_split = 0.20
-                                   )
+    def _test_generator(self):
+        """Creates a test data generator using ImageDataGenerator (no split)."""
+        datagenerator_kwargs = dict(rescale=1./255)
 
         dataflow_kwargs      = dict(
-                                        target_size   = self.config.params_image_size[:-1],  # Exclude channel dimension
+                                        target_size   = self.config.params_image_size[:-1],    # Exclude channel dimension
                                         batch_size    = self.config.params_batch_size,
                                         interpolation = "bilinear"
                                    )
 
-        valid_datagenerator  = tf.keras.preprocessing.image.ImageDataGenerator(**datagenerator_kwargs)
+        test_datagenerator   = tf.keras.preprocessing.image.ImageDataGenerator(**datagenerator_kwargs)
 
-        self.valid_generator = valid_datagenerator.flow_from_directory(
-                                                                           directory = self.config.training_data,
-                                                                           subset    = "validation",
-                                                                           shuffle   = False,
-                                                                           **dataflow_kwargs
-                                                                      )
+        self.test_generator  = test_datagenerator.flow_from_directory(
+                                                                        directory = self.config.test_data,
+                                                                        shuffle   = False,
+                                                                        **dataflow_kwargs
+                                                                     )
+    
 
     # ────────────────────────────────────────────────────────────────────────────────────────
     # Load Trained Model from Disk
@@ -87,12 +81,12 @@ class Evaluation:
     # ────────────────────────────────────────────────────────────────────────────────────────
     def evaluation(self):
         """
-        Loads the model, prepares validation data, evaluates performance,
+        Loads the model, prepares test data, evaluates performance,
         and saves the score locally.
         """
         self.model = self.load_model(self.config.path_of_model)
-        self._valid_generator()
-        self.score = self.model.evaluate(self.valid_generator)
+        self._test_generator()
+        self.score = self.model.evaluate(self.test_generator)
         self.save_score()
 
     

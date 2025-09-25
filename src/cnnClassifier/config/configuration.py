@@ -80,7 +80,7 @@ class ConfigurationManager:
         params             = self.params
 
         # Construct training data path from ingestion output
-        training_data      = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.source_dir_name)
+        training_data      = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.source_dir_name, "Train_and_Validation_Set")
 
         # Create training-specific directory
         create_directories([Path(training.root_dir)])
@@ -114,9 +114,12 @@ class ConfigurationManager:
     def get_evaluation_config(self) -> EvaluationConfig:
         # Return structured config object for evaluation stage
 
-        eval_config = EvaluationConfig(
+        # Construct testing data path from ingestion output
+        testing_data  = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.source_dir_name, "Test_Set")
+        
+        eval_config   = EvaluationConfig(
                          path_of_model         = "artifacts/training/model.h5",                  # Path to trained model
-                         training_data         = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.source_dir_name),
+                         test_data             = Path(testing_data),
                          mlflow_uri            = os.environ.get("MLFLOW_TRACKING_URI"),          # MLflow tracking URI
                          all_params            = self.params,                                    # Full parameter dictionary
                          params_image_size     = self.params.IMAGE_SIZE,

@@ -16,7 +16,6 @@ COPY . /app
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
-RUN python3 -c "import dotenv; print('✅ dotenv is installed')"
 
 # Expose Flask port
 EXPOSE 8080

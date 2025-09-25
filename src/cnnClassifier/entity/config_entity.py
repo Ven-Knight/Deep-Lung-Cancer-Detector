@@ -62,7 +62,7 @@ class TrainingConfig:
 @dataclass(frozen=True)
 class EvaluationConfig:
     path_of_model              : Path      # Path to trained model for evaluation
-    training_data              : Path      # Path to dataset used for evaluation
+    test_data                  : Path      # Path of the test data
     all_params                 : dict      # Dictionary of all hyperparameters used
     mlflow_uri                 : str       # MLflow tracking URI for logging metrics
     params_image_size          : list      # Input image dimensions [height, width, channels]
