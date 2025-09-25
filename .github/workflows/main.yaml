@@ -1,7 +1,10 @@
 name: Trigger Jenkins Job
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main          # Automatically trigger on push to main
+  workflow_dispatch:  # Still allows manual trigger if needed
     
 jobs:
   trigger:
