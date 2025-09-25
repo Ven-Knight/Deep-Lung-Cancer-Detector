@@ -48,13 +48,11 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          sh '''
-            cd Deep-Lung-Cancer-Detector
-            docker build --no-cache -t ${ECR_REPOSITORY}:latest .
-          '''
+          sh 'docker build --no-cache -t ${ECR_REPOSITORY}:latest .'
         }
       }
     }
+
 
     stage('Push Image') {
       steps {
