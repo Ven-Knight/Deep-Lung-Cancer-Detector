@@ -65,20 +65,20 @@ class PredictionPipeline:
         print(result)        # Optional: log raw prediction index
 
         # Map prediction index to human-readable label
-        class_map = {
-                        0 : "adeno_carcinoma",
-                        1 : "large_cell_carcinoma",
-                        2 : "normal",
-                        3 : "squamous_cell_carcinoma"
-                    }
-
         # class_map = {
-        #                 0: "colon_adenocarcinoma",
-        #                 1: "colon_normal",
-        #                 2: "lung_adenocarcinoma",
-        #                 3: "lung_normal",
-        #                 4: "lung_squamous_cell_carcinoma"
-        #             }                  # for LC25000 data
+        #                 0 : "adeno_carcinoma",
+        #                 1 : "large_cell_carcinoma",
+        #                 2 : "normal",
+        #                 3 : "squamous_cell_carcinoma"
+        #             }
+
+        class_map = {
+                        0: "colon_adenocarcinoma",
+                        1: "colon_normal",
+                        2: "lung_adenocarcinoma",
+                        3: "lung_normal",
+                        4: "lung_squamous_cell_carcinoma"
+                    }                  # for LC25000 data
 
 
         prediction = class_map.get(result[0], "Unknown")
