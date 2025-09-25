@@ -3,7 +3,7 @@ pandas
 gdown
 dvc
 mlflow[extras]==2.2.2
-# notebook==6.4.5      # pinned for Python 3.8 compatibility
+# notebook==6.4.5      # pinned for Python 3.8 compatibility   
 numpy
 matplotlib
 seaborn
